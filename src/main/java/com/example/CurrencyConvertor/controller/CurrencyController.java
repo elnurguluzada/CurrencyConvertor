@@ -134,6 +134,7 @@ public class CurrencyController {
                                 simpleDateFormat.parse(elem.getElementsByTagName("Dt").item(0).getTextContent()),
                                 elem.getElementsByTagName("Ccy").item(1).getTextContent(),
                                 Float.parseFloat(elem.getElementsByTagName("Amt").item(1).getTextContent()));
+                        currencyRepository.findByShortCurrencyName(currency.getShortCurrencyName());
 
 //                    System.out.println("Shor currency name = " + currency.getShortCurrencyName()  + " , rate = " + currency.getExchangeRate() + " , date = " + currency.getDate());
                 }
