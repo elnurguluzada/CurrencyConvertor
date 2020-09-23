@@ -15,7 +15,7 @@ public class Currency implements Serializable {
     private String currencyNameLT;
     private String currencyNameEN;
     private String shortCurrencyName;
-    private float exchangeRate;
+    private Double exchangeRate;
     @Column(name = "rateChangingDate")
     private Date date;
 
@@ -24,7 +24,7 @@ public class Currency implements Serializable {
     }
 
 
-    public Currency(String shortCurrencyName,String currencyNameLT, String currencyNameEN,  Float exchangeRate, Date date) {
+    public Currency(String shortCurrencyName,String currencyNameLT, String currencyNameEN,  Double exchangeRate, Date date) {
         this.shortCurrencyName = shortCurrencyName;
         this.currencyNameLT = currencyNameLT;
         this.currencyNameEN = currencyNameEN;
@@ -70,11 +70,11 @@ public class Currency implements Serializable {
         this.currencyNameLT = currencyNameLT;
     }
 
-    public float getExchangeRate() {
+    public double getExchangeRate() {
         return exchangeRate;
     }
 
-    public void setExchangeRate(float exchangeRate) {
+    public void setExchangeRate(Double exchangeRate) {
         this.exchangeRate = exchangeRate;
     }
 

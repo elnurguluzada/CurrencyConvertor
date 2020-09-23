@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 
 
 @Component
@@ -59,19 +60,16 @@ public class ScheduledCurrencyUpdates {
 
 
 
-    @Scheduled(fixedRate = 300000)
+    // Updating currency list daily
+    @Scheduled(fixedRate = 86100000)
     private void updateCurrencyList()  {
 
         String url = "http://lb.lt/webservices/FxRates/FxRates.asmx/getCurrencyList";
-
         ResponseEntity<String> response = restTemplate.exchange(url , HttpMethod.GET, getEntity(),String.class);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         try {
-
             NodeList nodeList = getElement(response ,factory ).getElementsByTagName("CcyNtry");
-
-
             for (int i =0; i< nodeList.getLength(); i++) {
 
                 Node node = nodeList.item(i);
@@ -101,17 +99,13 @@ public class ScheduledCurrencyUpdates {
     }
 
 
+    // Updating currency exchange rates daily
     @Scheduled(fixedRate = 86400000)
     private void updateExchangeRates(){
 
         String url = "http://lb.lt/webservices/FxRates/FxRates.asmx/getCurrentFxRates?tp=lt";
-
-
-
         ResponseEntity<String> response = restTemplate.exchange(url , HttpMethod.GET, getEntity(),String.class);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-
 
         try {
 
@@ -124,14 +118,21 @@ public class ScheduledCurrencyUpdates {
                 if(node.getNodeType() == Node.ELEMENT_NODE) {
 
                     Element elem = (Element) node;
-
-                    Currency currency = currencyRepository.findByShortCurrencyName( elem.getElementsByTagName("Ccy").item(1).getTextContent());
+                    String shortName = elem.getElementsByTagName("Ccy").item(1).getTextContent();
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    currency.setDate( simpleDateFormat.parse(elem.getElementsByTagName("Dt").item(0).getTextContent()));
-                    currency.setExchangeRate(Float.parseFloat(elem.getElementsByTagName("Amt").item(1).getTextContent()));
-                    currencyRepository.save(currency);
-                    System.out.println("Currency exchange rates updated");
+                    Date date =simpleDateFormat.parse(elem.getElementsByTagName("Dt").item(0).getTextContent());
+                    double newRate = Double.parseDouble(elem.getElementsByTagName("Amt").item(1).getTextContent());
 
+                    Currency currency = currencyRepository.findByShortCurrencyName(shortName);
+
+                   if(currency.getExchangeRate() != newRate){
+                       System.out.println("currency.getExchangeRate() = " + currency.getExchangeRate());
+                       System.out.println("newRate = " + newRate);
+                       currency.setExchangeRate(newRate);
+                       currency.setDate(date);
+                       currencyRepository.save(currency);
+                       System.out.println("Currency exchange rates updated");
+                   }
 
                 }
             }
