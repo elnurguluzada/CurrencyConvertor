@@ -108,7 +108,6 @@ public class ScheduledCurrencyUpdates {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         try {
-
             NodeList nodeList = getElement(response,factory).getElementsByTagName("FxRate");
 
             for (int i =0; i< nodeList.getLength(); i++) {
