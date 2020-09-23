@@ -1,13 +1,8 @@
 package com.example.CurrencyConvertor.model;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.time.Instant;
 import java.util.Date;
 
 @Entity
@@ -21,28 +16,27 @@ public class Currency implements Serializable {
     private String currencyNameEN;
     private String shortCurrencyName;
     private float exchangeRate;
+    @Column(name = "rateChangingDate")
     private Date date;
 
 
     public Currency() {
     }
 
-    public Currency( Date date,String shortCurrencyName, float exchangeRate ) {
 
-        this.date= date;
-        this.shortCurrencyName = shortCurrencyName;
-        this.exchangeRate = exchangeRate;
-
-    }
-
-
-    public Currency(String shortCurrencyName,String currencyNameLT, String currencyNameEN ) {
+    public Currency(String shortCurrencyName,String currencyNameLT, String currencyNameEN,  Float exchangeRate, Date date) {
         this.shortCurrencyName = shortCurrencyName;
         this.currencyNameLT = currencyNameLT;
         this.currencyNameEN = currencyNameEN;
-
+        this.exchangeRate = exchangeRate;
+        this.date = date;
     }
 
+    public Currency(String ccy, String ccyNm, String ccyNm1) {
+        this.shortCurrencyName = ccy;
+        this.currencyNameLT = ccyNm;
+        this.currencyNameEN = ccyNm1;
+    }
 
     public String getCurrencyNameEN() {
         return currencyNameEN;
