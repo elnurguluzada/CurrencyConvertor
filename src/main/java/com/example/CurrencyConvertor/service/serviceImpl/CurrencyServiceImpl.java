@@ -1,31 +1,57 @@
 package com.example.CurrencyConvertor.service.serviceImpl;
 
+import com.example.CurrencyConvertor.model.Conversion;
 import com.example.CurrencyConvertor.model.Currency;
 import com.example.CurrencyConvertor.repository.CurrencyRepository;
 import com.example.CurrencyConvertor.service.CurrencyService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import java.util.ArrayList;
+import java.util.Comparator;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
 
 @Service
-public class CurrencyServiceImpl    {
+public class CurrencyServiceImpl implements CurrencyService    {
 
 
+    CurrencyRepository currencyRepository;
+
+    public CurrencyServiceImpl(CurrencyRepository currencyRepository){
+        this.currencyRepository = currencyRepository;
+    }
+
+
+    @Override
+    public ArrayList<Currency> findAllCurrencies() {
+
+        ArrayList<Currency> currencyArrayList = currencyRepository.findAllCurrencies();
+        currencyArrayList.sort(Comparator.comparing(Currency::getShortCurrencyName));
+        return currencyArrayList ;
+    }
+
+    @Override
+    public Currency findByShortCurrencyName(String shortCurrencyName) {
+        return currencyRepository.findByShortCurrencyName(shortCurrencyName);
+    }
+
+
+    public Double convert(Conversion conversion){
+
+       Currency fromCurrency = currencyRepository.findByShortCurrencyName(conversion.getFromCurrency());
+       Currency toCurrency = currencyRepository.findByShortCurrencyName(conversion.getToCurrency());
+
+
+           Double toRate = toCurrency.getExchangeRate();
+           System.out.println("toRate = " + toRate);
+           Double fromRate = fromCurrency.getExchangeRate();
+
+           Double result = toRate * conversion.getValue() / fromRate;
+           if(result < 0) {
+               return null;
+           }
+
+
+           return result;
+    }
 
 
 

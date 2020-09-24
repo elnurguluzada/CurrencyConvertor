@@ -4,6 +4,7 @@ package com.example.CurrencyConvertor.components;
 import com.example.CurrencyConvertor.model.Currency;
 import com.example.CurrencyConvertor.repository.CurrencyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,12 @@ public class ScheduledCurrencyUpdates {
     @Autowired
     CurrencyRepository currencyRepository;
 
+    @Value("${api.for.currency.list.updating}")
+    private String currencyRateUpdateAPI;
+
+    @Value("${api.for.exchange.rate.updating}")
+    private String exchangeRateUpdateAPI;
+
     private final RestTemplate restTemplate = new RestTemplate();
     private final HttpHeaders headers = new HttpHeaders();
 
@@ -59,94 +66,93 @@ public class ScheduledCurrencyUpdates {
 
 
 
-
-    // Updating currency list daily
-    @Scheduled(fixedRate = 86100000)
-    private void updateCurrencyList()  {
-
-        String url = "http://lb.lt/webservices/FxRates/FxRates.asmx/getCurrencyList";
-        ResponseEntity<String> response = restTemplate.exchange(url , HttpMethod.GET, getEntity(),String.class);
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-        try {
-            NodeList nodeList = getElement(response ,factory ).getElementsByTagName("CcyNtry");
-            for (int i =0; i< nodeList.getLength(); i++) {
-
-                Node node = nodeList.item(i);
-
-                if(node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element elem = (Element) node;
-                    Currency currency = new Currency(
-                            elem.getElementsByTagName("Ccy").item(0).getTextContent(),
-                            elem.getElementsByTagName("CcyNm").item(0).getTextContent(),
-                            elem.getElementsByTagName("CcyNm").item(1).getTextContent());
-
-                   if(!currencyRepository.existsByShortCurrencyName(currency.getShortCurrencyName())){
-                       currencyRepository.save(currency);
-                   }
-                }
-
-
-
-            }
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    // Updating currency exchange rates daily
-    @Scheduled(fixedRate = 86400000)
-    private void updateExchangeRates(){
-
-        String url = "http://lb.lt/webservices/FxRates/FxRates.asmx/getCurrentFxRates?tp=lt";
-        ResponseEntity<String> response = restTemplate.exchange(url , HttpMethod.GET, getEntity(),String.class);
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-        try {
-            NodeList nodeList = getElement(response,factory).getElementsByTagName("FxRate");
-
-            for (int i =0; i< nodeList.getLength(); i++) {
-
-                Node node = nodeList.item(i);
-
-                if(node.getNodeType() == Node.ELEMENT_NODE) {
-
-                    Element elem = (Element) node;
-                    String shortName = elem.getElementsByTagName("Ccy").item(1).getTextContent();
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    Date date =simpleDateFormat.parse(elem.getElementsByTagName("Dt").item(0).getTextContent());
-                    double newRate = Double.parseDouble(elem.getElementsByTagName("Amt").item(1).getTextContent());
-
-                    Currency currency = currencyRepository.findByShortCurrencyName(shortName);
-
-                   if(currency.getExchangeRate() != newRate){
-                       System.out.println("currency.getExchangeRate() = " + currency.getExchangeRate());
-                       System.out.println("newRate = " + newRate);
-                       currency.setExchangeRate(newRate);
-                       currency.setDate(date);
-                       currencyRepository.save(currency);
-                       System.out.println("Currency exchange rates updated");
-                   }
-
-                }
-            }
-        }  catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-
-
-    }
+//
+//    // Updating currency list every 12 hours
+//    @Scheduled(fixedRate = 86100000)
+//    private void updateCurrencyList()  {
+//
+//        ResponseEntity<String> response = restTemplate.exchange(currencyRateUpdateAPI , HttpMethod.GET, getEntity(),String.class);
+//        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//
+//        try {
+//            NodeList nodeList = getElement(response ,factory ).getElementsByTagName("CcyNtry");
+//            for (int i =0; i< nodeList.getLength(); i++) {
+//
+//                Node node = nodeList.item(i);
+//
+//                if(node.getNodeType() == Node.ELEMENT_NODE) {
+//                    Element elem = (Element) node;
+//                    Currency currency = new Currency(
+//                            elem.getElementsByTagName("Ccy").item(0).getTextContent(),
+//                            elem.getElementsByTagName("CcyNm").item(0).getTextContent(),
+//                            elem.getElementsByTagName("CcyNm").item(1).getTextContent());
+//
+//                   if(!currencyRepository.existsByShortCurrencyName(currency.getShortCurrencyName())){
+//                       currencyRepository.save(currency);
+//                   }
+//                }
+//
+//
+//
+//            }
+//        } catch (ParserConfigurationException e) {
+//            e.printStackTrace();
+//        } catch (SAXException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//
+//    // Updating currency exchange rates every 12 hours
+//    @Scheduled(fixedRate = 86400000)
+//    private void updateExchangeRates(){
+//
+//
+//        ResponseEntity<String> response = restTemplate.exchange(exchangeRateUpdateAPI , HttpMethod.GET, getEntity(),String.class);
+//        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//
+//        try {
+//            NodeList nodeList = getElement(response,factory).getElementsByTagName("FxRate");
+//
+//            for (int i =0; i< nodeList.getLength(); i++) {
+//
+//                Node node = nodeList.item(i);
+//
+//                if(node.getNodeType() == Node.ELEMENT_NODE) {
+//
+//                    Element elem = (Element) node;
+//                    String shortName = elem.getElementsByTagName("Ccy").item(1).getTextContent();
+//                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//                    Date date =simpleDateFormat.parse(elem.getElementsByTagName("Dt").item(0).getTextContent());
+//                    double newRate = Double.parseDouble(elem.getElementsByTagName("Amt").item(1).getTextContent());
+//
+//                    Currency currency = currencyRepository.findByShortCurrencyName(shortName);
+//
+//                   if(currency.getExchangeRate() != newRate){
+//                       System.out.println("currency.getExchangeRate() = " + currency.getExchangeRate());
+//                       System.out.println("newRate = " + newRate);
+//                       currency.setExchangeRate(newRate);
+//                       currency.setDate(date);
+//                       currencyRepository.save(currency);
+//                       System.out.println("Currency exchange rates updated");
+//                   }
+//
+//                }
+//            }
+//        }  catch (SAXException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        } catch (ParserConfigurationException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//    }
 
 
 }
