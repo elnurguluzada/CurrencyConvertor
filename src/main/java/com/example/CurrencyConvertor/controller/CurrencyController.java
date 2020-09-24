@@ -50,7 +50,7 @@ public class CurrencyController {
 
 
 
-    @PostMapping(value = "/currencyConvertion" , produces = {"application/json"})
+    @PostMapping(value = "/currencyConversion" , produces = {"application/json"})
     public ResponseEntity<Double> convertCurrency(@RequestBody Conversion conversion){
 
            Optional<Double> result = Optional.ofNullable(currencyService.convert(conversion));
@@ -63,14 +63,9 @@ public class CurrencyController {
 
 
 
-    @ModelAttribute("currencyList")
-    public ArrayList<Currency> getCurrencyList() {
-
-        ArrayList<Currency> currencyList =  new ArrayList<>();
-
-        currencyList= currencyService.findAllCurrencies();
-
-        return currencyList;
+    @GetMapping(value = "/currencyList" , produces = { "application/json" })
+    public ResponseEntity<List<Currency>> getCurrencyList() {
+        return new ResponseEntity<>(currencyService.findAllCurrencies(), HttpStatus.OK);
     }
 
 }

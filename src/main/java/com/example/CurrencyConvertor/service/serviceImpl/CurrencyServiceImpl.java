@@ -38,11 +38,8 @@ public class CurrencyServiceImpl implements CurrencyService    {
 
        Currency fromCurrency = currencyRepository.findByShortCurrencyName(conversion.getFromCurrency());
        Currency toCurrency = currencyRepository.findByShortCurrencyName(conversion.getToCurrency());
-
-
-           Double toRate = toCurrency.getExchangeRate();
-           System.out.println("toRate = " + toRate);
-           Double fromRate = fromCurrency.getExchangeRate();
+       Double toRate = toCurrency.getExchangeRate();
+       Double fromRate = fromCurrency.getExchangeRate();
 
            Double result = toRate * conversion.getValue() / fromRate;
            if(result < 0) {
