@@ -5,6 +5,7 @@ import com.example.CurrencyConvertor.model.Currency;
 import com.example.CurrencyConvertor.repository.CurrencyRepository;
 import com.example.CurrencyConvertor.service.CurrencyService;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -38,14 +39,19 @@ public class CurrencyServiceImpl implements CurrencyService    {
 
        Currency fromCurrency = currencyRepository.findByShortCurrencyName(conversion.getFromCurrency());
        Currency toCurrency = currencyRepository.findByShortCurrencyName(conversion.getToCurrency());
+        System.out.println("toCurrency = " + toCurrency);
        Double toRate = toCurrency.getExchangeRate();
        Double fromRate = fromCurrency.getExchangeRate();
 
            Double result = toRate * conversion.getValue() / fromRate;
+//           DecimalFormat decimalFormat = new DecimalFormat("###.#####");
+//        System.out.println("Result before rounding = " +result);
+//          result = Double.valueOf(decimalFormat.format(result));
+//        System.out.println("Result after rounding = " +result);
+
            if(result < 0) {
                return null;
            }
-
 
            return result;
     }

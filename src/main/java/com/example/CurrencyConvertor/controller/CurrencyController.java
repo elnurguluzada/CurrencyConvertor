@@ -33,7 +33,7 @@ public class CurrencyController {
 
 
 
-    @GetMapping("/addCurrencyExchangeRates")
+    @GetMapping("/currencyConverter")
     public ModelAndView addExchangeRate(){
 
 
@@ -50,7 +50,7 @@ public class CurrencyController {
 
 
 
-    @PostMapping(value = "/currencyConversion" , produces = {"application/json"})
+    @PostMapping(value = "/conversion", produces = {"application/json"})
     public ResponseEntity<Double> convertCurrency(@RequestBody Conversion conversion){
 
            Optional<Double> result = Optional.ofNullable(currencyService.convert(conversion));

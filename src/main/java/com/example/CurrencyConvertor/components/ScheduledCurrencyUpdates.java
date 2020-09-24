@@ -1,18 +1,15 @@
 package com.example.CurrencyConvertor.components;
 
 
-import com.example.CurrencyConvertor.model.Currency;
+
 import com.example.CurrencyConvertor.repository.CurrencyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 
@@ -21,11 +18,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Date;
+
 
 
 @Component
@@ -65,7 +59,7 @@ public class ScheduledCurrencyUpdates {
     }
 
 
-
+//
 //
 //    // Updating currency list every 12 hours
 //    @Scheduled(fixedRate = 86100000)

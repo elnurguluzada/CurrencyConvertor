@@ -52,13 +52,13 @@ public class CurrencyServiceTest {
 
 
     @Test
-    public void convertWithoutNegativeGivenValue(){
+    public void convertWillReturnEmptyIfCurrencyDoesntExist(){
 
         Currency euro = new Currency("EUR", "Euras" , "Euro" ,  1d, null);
         Currency usd = new Currency("USD", "JAV doleris" , "US dollar", 1.174,null);
 
         Mockito.when(currencyRepository.findByShortCurrencyName("EUR")).thenReturn(euro);
-        Mockito.when(currencyRepository.findByShortCurrencyName("EUR")).thenReturn(usd);
+        Mockito.when(currencyRepository.findByShortCurrencyName("USD")).thenReturn(usd);
         Conversion conversion = new Conversion("EUR" , "USD" , -10);
 
         Optional<Double> result = Optional.ofNullable(currencyServiceImpl.convert(conversion));
@@ -72,22 +72,24 @@ public class CurrencyServiceTest {
 
 
     @Test
-    public void convertHasReturnValue(){
+    public void convertShouldGiveResult(){
 
         Currency euro = new Currency("EUR", "Euras" , "Euro" ,  1d, null);
-        Currency usd = new Currency("USD", "JAV doleris" , "US dollar", 1.174,null);
+        Currency usd = new Currency("USD", "JAV doleris" , "US dollar", 1.15795,null);
 
         Mockito.when(currencyRepository.findByShortCurrencyName("EUR")).thenReturn(euro);
-        Mockito.when(currencyRepository.findByShortCurrencyName("EUR")).thenReturn(usd);
+        Mockito.when(currencyRepository.findByShortCurrencyName("USD")).thenReturn(usd);
         Conversion conversion = new Conversion(euro.getShortCurrencyName() , usd.getShortCurrencyName() , 10);
-        Optional<Double> result = Optional.ofNullable(currencyServiceImpl.convert(conversion));
+      //  Optional<Double> result = Optional.ofNullable(currencyServiceImpl.convert(conversion));
 
+
+        Optional<Double> result = Optional.ofNullable(this.currencyServiceImpl.convert(conversion));
 
 
         Assert.assertTrue(result.isPresent());
-        double desiredValue = Math.round(11.739999999 *100.0) / 100.0;
-        double obtainedValue = Math.round(result.get() *100.0) / 100.0;
-        Assert.assertEquals(desiredValue,obtainedValue);
+        double desiredValue = Math.round(8.635951466 * 100.0) / 100.0;
+        double obtainedValue = Math.round(result.get()* 100.0) / 100.0;
+        Assert.assertTrue(desiredValue == obtainedValue);
 
 
     }
