@@ -28,7 +28,7 @@ function fillCurrencies(dropdown, jsonParsed) {
 }
 
 
-$("#convertButton").click(function() {
+function convertCurrency() {
 
     var from = $('#fromCurrency').find(":selected").text();
 
@@ -43,7 +43,7 @@ $("#convertButton").click(function() {
         data: JSON.stringify({
             "fromCurrency": from,
             "toCurrency": to,
-            "value": value
+            "amount": value
         }),
         contentType: "application/json;",
         success: function(data) {
@@ -54,8 +54,8 @@ $("#convertButton").click(function() {
 
             toastr.error('There was a problem converting!');
         }
-    });
+    })
+}
 
 
 
-});

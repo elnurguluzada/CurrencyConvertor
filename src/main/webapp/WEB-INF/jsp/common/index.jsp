@@ -54,7 +54,7 @@
 
                     <form  class="d-flex align-items-center justify-content-center">
                         <div class="calculator-first-part d-flex align-items-center dropdown">
-                            <input id="amout" type="number" name="inputNumber" placeholder="0">
+                            <input id="amout" type="number" name="inputNumber" placeholder="0" onkeyup="convertCurrency()">
                             <select id="fromCurrency">
                                 <option >From...</option>
                             </select>
@@ -70,9 +70,7 @@
                             </select>
                         </div>
                     </form>
-                    <div>
-                        <button class="btn cryptos-btn" type="button" id="convertButton">CONVERT</button>
-                    </div>
+
                 </div>
 
             </div>
@@ -80,10 +78,6 @@
 
     </div>
 </section>
-
-
-
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
@@ -93,7 +87,6 @@
 <script src="../assets/js/plugins/plugins.js" type="1491f53a9dd1d6926d797821-text/javascript"></script>
 <script src="../assets/js/active.js" type="1491f53a9dd1d6926d797821-text/javascript"></script>
 <script src="../assets/js/front-processes.js"></script>
-
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13" type="1491f53a9dd1d6926d797821-text/javascript"></script>
 <script type="1491f53a9dd1d6926d797821-text/javascript">
   window.dataLayer = window.dataLayer || [];

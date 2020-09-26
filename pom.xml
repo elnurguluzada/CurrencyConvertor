@@ -84,6 +84,9 @@
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -98,7 +101,12 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>com.microsoft:azure</groupId>
+				<artifactId>azure-webapp-maven-plugin</artifactId>
+				<version>1.7.0</version>
+			</plugin>
 		</plugins>
+		<finalName>currency-convertor</finalName>
 	</build>
-
 </project>

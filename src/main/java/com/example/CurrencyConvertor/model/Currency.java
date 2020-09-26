@@ -16,7 +16,7 @@ public class Currency implements Serializable {
     private String currencyNameEN;
     private String shortCurrencyName;
     private Double exchangeRate;
-    @Column(name = "rateChangingDate")
+    @Column(name = "rateUpdatingDate")
     private Date date;
 
 

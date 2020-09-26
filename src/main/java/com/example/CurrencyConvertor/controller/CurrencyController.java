@@ -5,6 +5,7 @@ package com.example.CurrencyConvertor.controller;
 import com.example.CurrencyConvertor.model.Conversion;
 import com.example.CurrencyConvertor.model.Currency;
 import com.example.CurrencyConvertor.service.CurrencyService;
+import com.example.CurrencyConvertor.service.UserActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,21 +21,17 @@ public class CurrencyController {
 
 
     private final CurrencyService currencyService;
+    private final UserActivityService userActivityService;
 
     @Autowired
-    public CurrencyController( CurrencyService currencyService) {
+    public CurrencyController(CurrencyService currencyService, UserActivityService userActivityService) {
         this.currencyService = currencyService;
-
-
+        this.userActivityService = userActivityService;
     }
 
 
-
-
-
-
     @GetMapping("/currencyConverter")
-    public ModelAndView addExchangeRate(){
+    public ModelAndView getIndexPage(){
 
 
         ModelAndView modelAndView = new ModelAndView();
@@ -51,13 +48,18 @@ public class CurrencyController {
 
 
     @PostMapping(value = "/conversion", produces = {"application/json"})
-    public ResponseEntity<Double> convertCurrency(@RequestBody Conversion conversion){
+    public ResponseEntity<Double> convertCurrency(@RequestBody Conversion conversion ){
 
-           Optional<Double> result = Optional.ofNullable(currencyService.convert(conversion));
+
+
+
+            Optional<Double> result = Optional.ofNullable(currencyService.convert(conversion));
+            conversion.setConversionResult(result.get().doubleValue());
+
             if(result.isPresent()){
+                userActivityService.saveUserActivity(conversion);
                 return new ResponseEntity<>(result.get() , HttpStatus.OK);
             }
-
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
