@@ -30,7 +30,7 @@ public class CurrencyController {
     }
 
 
-    @GetMapping("/currencyConverter")
+    @GetMapping("/")
     public ModelAndView getIndexPage(){
 
 

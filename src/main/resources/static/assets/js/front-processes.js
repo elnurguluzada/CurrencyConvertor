@@ -36,8 +36,9 @@ function convertCurrency() {
 
     var value = $('#amout').val();
 
+    var currentRequest = null;
     // Make the http request using Ajax
-    $.ajax({
+   currentRequest = $.ajax({
         type: "POST",
         url: "/conversion",
         data: JSON.stringify({
@@ -46,6 +47,12 @@ function convertCurrency() {
             "amount": value
         }),
         contentType: "application/json;",
+        beforeSend: function(){
+
+            if(currentRequest != null) {
+                currentRequest.abort();
+            }
+        },
         success: function(data) {
             console.log(data);
             $("#conversionResult").attr("placeholder", data);
